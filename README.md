@@ -1,33 +1,22 @@
-Package yaml provides a parser, linter, formatter and compiler for the [drone](https://github.com/drone/drone) configuration file format.
+# drone-yaml
 
-Lint the yaml file:
+Custom Drone YAML formatter
 
-```text
-$ drone-yaml lint samples/simple.yml
-```
+[![Build Status](https://img.shields.io/drone/build/thegeeklab/drone-yaml?logo=drone&server=https%3A%2F%2Fdrone.thegeeklab.de)](https://drone.thegeeklab.de/thegeeklab/drone-yaml)
+[![Docker Hub](https://img.shields.io/badge/dockerhub-latest-blue.svg?logo=docker&logoColor=white)](https://hub.docker.com/r/thegeeklab/drone-yaml)
+[![Quay.io](https://img.shields.io/badge/quay-latest-blue.svg?logo=docker&logoColor=white)](https://quay.io/repository/thegeeklab/drone-yaml)
+[![Go Report Card](https://goreportcard.com/badge/github.com/thegeeklab/drone-yaml)](https://goreportcard.com/report/github.com/thegeeklab/drone-yaml)
+[![GitHub contributors](https://img.shields.io/github/contributors/thegeeklab/drone-yaml)](https://github.com/thegeeklab/drone-yaml/graphs/contributors)
+[![Source: GitHub](https://img.shields.io/badge/source-github-blue.svg?logo=github&logoColor=white)](https://github.com/thegeeklab/drone-yaml)
+[![License: MIT](https://img.shields.io/github/license/thegeeklab/drone-yaml)](https://github.com/thegeeklab/drone-yaml/blob/main/LICENSE)
 
-Format the yaml file:
+Custom linter and formatter for the [Drone](https://github.com/drone/drone) YAML configuration file format. You can find the full documentation at You can find the full documentation at [https://drone-plugin-index.geekdocs.de](https://drone-plugin-index.geekdocs.de/tools/drone-yaml).
 
-```text
-$ drone-yaml fmt samples/simple.yml
-$ drone-yaml fmt samples/simple.yml --save
-```
+## Contributors
 
-Sign the yaml file using a 32-bit secret key:
+Special thanks goes to all [contributors](https://github.com/thegeeklab/drone-yaml/graphs/contributors). If you would like to contribute,
+please see the [instructions](https://github.com/thegeeklab/drone-yaml/blob/main/CONTRIBUTING.md).
 
-```text
-$ drone-yaml sign 642909eb4c3d47e33999235c0598353c samples/simple.yml
-$ drone-yaml sign 642909eb4c3d47e33999235c0598353c samples/simple.yml --save
-```
+## License
 
-Verify the yaml file signature:
-
-```text
-$ drone-yaml verify 642909eb4c3d47e33999235c0598353c samples/simple.yml
-```
-
-Compile the yaml file:
-
-```text
-$ drone-yaml compile samples/simple.yml samples/simple.json
-```
+This project is licensed under the MIT License - see the [LICENSE](https://github.com/thegeeklab/drone-yaml/blob/main/LICENSE) file for details.

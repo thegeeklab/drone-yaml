@@ -1,4 +1,5 @@
-NOTES*
-*.out
-*.env
-drone-yaml
+/release/
+/drone-yaml*
+
+coverage.out
+CHANGELOG.md
