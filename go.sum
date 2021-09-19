@@ -7,8 +7,8 @@ github.com/alecthomas/units v0.0.0-20210912230133-d1bdfacee922 h1:8ypNbf5sd3Sm3c
 github.com/alecthomas/units v0.0.0-20210912230133-d1bdfacee922/go.mod h1:OMCwj8VM1Kc9e19TLln2VL61YJF0x1XFtfdL4JdbSyE=
 github.com/bmatcuk/doublestar/v4 v4.0.2 h1:X0krlUVAVmtr2cRoTqR8aDMrDqnB36ht8wpWTiQ3jsA=
 github.com/bmatcuk/doublestar/v4 v4.0.2/go.mod h1:xBQ8jztBU6kakFMg+8WGxn0c6z1fTSPVIjEY1Wr7jzc=
-github.com/buildkite/yaml v2.1.0+incompatible h1:xirI+ql5GzfikVNDmt+yeiXpf/v1Gt03qXTtT5WXdr8=
-github.com/buildkite/yaml v2.1.0+incompatible/go.mod h1:UoU8vbcwu1+vjZq01+KrpSeLBgQQIjL/H7Y6KwikUrI=
+github.com/buildkite/yaml v2.2.0+incompatible h1:udgEsIWzNhX05fZpRt0wTjtMVwp1PYFQnuu5l7ivOZ8=
+github.com/buildkite/yaml v2.2.0+incompatible/go.mod h1:5hCug3EZaHXU3FdCA3gJm0YTNi+V+ooA2qNTiVpky4A=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
