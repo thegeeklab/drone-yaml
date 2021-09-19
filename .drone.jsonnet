@@ -87,7 +87,7 @@ local PipelineBuildBinaries = {
       commands: [
         '[ -z "${DRONE_TAG}" ] && BUILD_VERSION=${DRONE_COMMIT_SHA:0:8} || BUILD_VERSION=${DRONE_TAG##v}',
         'mkdir -p release/',
-        "cd cmd/drone-yaml && xgo -ldflags \"-s -w -X main.version=$BUILD_VERSION\" -tags netgo -targets 'linux/amd64,linux/arm-6,linux/arm-7,linux/arm64' -out drone-yaml .",
+        "xgo -ldflags \"-s -w -X main.version=$BUILD_VERSION\" -tags netgo -targets 'linux/amd64,linux/arm-6,linux/arm-7,linux/arm64' -out drone-yaml .",
         'mv /build/* /drone/src/release/',
         'ls -l /drone/src/release/',
       ],
@@ -172,7 +172,7 @@ local PipelineBuildContainer(arch='amd64') = {
       image: 'golang:1.16',
       commands: [
         '[ -z "${DRONE_TAG}" ] && BUILD_VERSION=${DRONE_COMMIT_SHA:0:8} || BUILD_VERSION=${DRONE_TAG##v}',
-        'go build -v -ldflags "-X main.version=$BUILD_VERSION" -a -tags netgo -o release/' + arch + '/drone-yaml ./cmd/drone-yaml',
+        'go build -v -ldflags "-X main.version=$BUILD_VERSION" -a -tags netgo -o release/' + arch + '/drone-yaml',
       ],
     },
     {

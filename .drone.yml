@@ -66,7 +66,7 @@ steps:
     commands:
       - "[ -z \"${DRONE_TAG}\" ] && BUILD_VERSION=${DRONE_COMMIT_SHA:0:8} || BUILD_VERSION=${DRONE_TAG##v}"
       - mkdir -p release/
-      - cd cmd/drone-yaml && xgo -ldflags "-s -w -X main.version=$BUILD_VERSION" -tags netgo -targets 'linux/amd64,linux/arm-6,linux/arm-7,linux/arm64' -out drone-yaml .
+      - xgo -ldflags "-s -w -X main.version=$BUILD_VERSION" -tags netgo -targets 'linux/amd64,linux/arm-6,linux/arm-7,linux/arm64' -out drone-yaml .
       - mv /build/* /drone/src/release/
       - ls -l /drone/src/release/
 
@@ -138,7 +138,7 @@ steps:
     image: golang:1.16
     commands:
       - "[ -z \"${DRONE_TAG}\" ] && BUILD_VERSION=${DRONE_COMMIT_SHA:0:8} || BUILD_VERSION=${DRONE_TAG##v}"
-      - go build -v -ldflags "-X main.version=$BUILD_VERSION" -a -tags netgo -o release/amd64/drone-yaml ./cmd/drone-yaml
+      - go build -v -ldflags "-X main.version=$BUILD_VERSION" -a -tags netgo -o release/amd64/drone-yaml
 
   - name: dryrun
     image: thegeeklab/drone-docker:19
@@ -224,7 +224,7 @@ steps:
     image: golang:1.16
     commands:
       - "[ -z \"${DRONE_TAG}\" ] && BUILD_VERSION=${DRONE_COMMIT_SHA:0:8} || BUILD_VERSION=${DRONE_TAG##v}"
-      - go build -v -ldflags "-X main.version=$BUILD_VERSION" -a -tags netgo -o release/arm64/drone-yaml ./cmd/drone-yaml
+      - go build -v -ldflags "-X main.version=$BUILD_VERSION" -a -tags netgo -o release/arm64/drone-yaml
 
   - name: dryrun
     image: thegeeklab/drone-docker:19
@@ -310,7 +310,7 @@ steps:
     image: golang:1.16
     commands:
       - "[ -z \"${DRONE_TAG}\" ] && BUILD_VERSION=${DRONE_COMMIT_SHA:0:8} || BUILD_VERSION=${DRONE_TAG##v}"
-      - go build -v -ldflags "-X main.version=$BUILD_VERSION" -a -tags netgo -o release/arm/drone-yaml ./cmd/drone-yaml
+      - go build -v -ldflags "-X main.version=$BUILD_VERSION" -a -tags netgo -o release/arm/drone-yaml
 
   - name: dryrun
     image: thegeeklab/drone-docker:19
@@ -529,6 +529,6 @@ depends_on:
 
 ---
 kind: signature
-hmac: 06308f21c894d1b47d0134b9c2fd87311e9a1eaffe70e2ddac7d1cfd397bf746
+hmac: c733f31cdc76fd0c9cdcf76cbb8d1688636a280554a5a93b7ca6518750c7adb7
 
 ...
