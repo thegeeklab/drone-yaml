@@ -1,6 +1,0 @@
-kind: pipeline
-name: default
-
-steps:
-- name: test_build
-  push: octocat/hello-world
