@@ -1,19 +1,22 @@
 module github.com/drone/drone-yaml
 
+go 1.16
+
 require (
-	github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc // indirect
-	github.com/alecthomas/units v0.0.0-20151022065526-2efee857e7cf // indirect
-	github.com/bmatcuk/doublestar v1.1.1
+	github.com/BurntSushi/toml v0.4.1 // indirect
+	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751 // indirect
+	github.com/alecthomas/units v0.0.0-20210912230133-d1bdfacee922 // indirect
+	github.com/bmatcuk/doublestar v1.3.4
 	github.com/buildkite/yaml v2.1.0+incompatible
-	github.com/docker/distribution v2.7.1+incompatible
-	github.com/docker/go-units v0.3.3
-	github.com/drone/drone-runtime v1.0.7-0.20190729202838-87c84080f4a1
-	github.com/ghodss/yaml v1.0.0
+	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/docker/go-units v0.4.0
 	github.com/google/go-cmp v0.2.0
 	github.com/kr/pretty v0.1.0 // indirect
-	github.com/sergi/go-diff v1.0.0
-	github.com/stretchr/testify v1.3.0 // indirect
-	github.com/vinzenz/yaml v0.0.0-20170920082545-91409cdd725d
+	golang.org/x/lint v0.0.0-20210508222113-6edffad5e616
+	golang.org/x/mod v0.5.0 // indirect
+	golang.org/x/sys v0.0.0-20210917161153-d61c044b1678 // indirect
+	golang.org/x/tools v0.1.6 // indirect
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
 	gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127 // indirect
+	honnef.co/go/tools v0.2.1
 )

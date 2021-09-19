@@ -1,16 +1,5 @@
-// Copyright 2019 Drone IO, Inc.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//      http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Copyright (c) 2019, Drone IO Inc.
+// Copyright (c) 2021, Robert Kaussow <mail@thegeeklab.de>
 
 package pretty
 
@@ -22,6 +11,7 @@ import (
 
 // helper function pretty prints the container mapping.
 func printContainer(w writer, v *yaml.Container) {
+	w.IndentIncrease()
 	w.WriteTagValue("name", v.Name)
 	w.WriteTagValue("pull", v.Pull)
 	w.WriteTagValue("image", v.Image)
@@ -75,6 +65,7 @@ func printContainer(w writer, v *yaml.Container) {
 		printDependsOn(w, v.DependsOn)
 	}
 	w.WriteByte('\n')
+	w.IndentDecrease()
 }
 
 // helper function pretty prints the build node.
@@ -213,10 +204,14 @@ func printVolumeMounts(w writer, v []*yaml.VolumeMount) {
 	for _, v := range v {
 		s := new(indexWriter)
 		s.writer = w
+		w.IndentIncrease()
 		s.IndentIncrease()
+
 		s.WriteTagValue("name", v.Name)
 		s.WriteTagValue("path", v.MountPath)
+
 		s.IndentDecrease()
+		w.IndentDecrease()
 	}
 }
 

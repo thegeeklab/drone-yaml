@@ -1,16 +1,5 @@
-// Copyright 2019 Drone IO, Inc.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//      http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Copyright (c) 2019, Drone IO Inc.
+// Copyright (c) 2021, Robert Kaussow <mail@thegeeklab.de>
 
 package linter
 
@@ -22,14 +11,14 @@ import (
 )
 
 var os = map[string]struct{}{
-	"linux":   struct{}{},
-	"windows": struct{}{},
+	"linux":   {},
+	"windows": {},
 }
 
 var arch = map[string]struct{}{
-	"arm":   struct{}{},
-	"arm64": struct{}{},
-	"amd64": struct{}{},
+	"arm":   {},
+	"arm64": {},
+	"amd64": {},
 }
 
 // ErrDuplicateStepName is returned when two Pipeline steps
@@ -73,7 +62,7 @@ func checkPipeline(pipeline *yaml.Pipeline, trusted bool) error {
 		return err
 	}
 	names := map[string]struct{}{}
-	if pipeline.Clone.Disable == false {
+	if !pipeline.Clone.Disable {
 		names["clone"] = struct{}{}
 	}
 	for _, container := range pipeline.Steps {
@@ -138,22 +127,22 @@ func checkContainer(container *yaml.Container, trusted bool) error {
 	if container.Name == "" {
 		return errors.New("linter: invalid or missing name")
 	}
-	if trusted == false && container.Privileged {
+	if trusted && container.Privileged {
 		return errors.New("linter: untrusted repositories cannot enable privileged mode")
 	}
-	if trusted == false && len(container.Devices) > 0 {
+	if trusted && len(container.Devices) > 0 {
 		return errors.New("linter: untrusted repositories cannot mount devices")
 	}
-	if trusted == false && len(container.DNS) > 0 {
+	if trusted && len(container.DNS) > 0 {
 		return errors.New("linter: untrusted repositories cannot configure dns")
 	}
-	if trusted == false && len(container.DNSSearch) > 0 {
+	if trusted && len(container.DNSSearch) > 0 {
 		return errors.New("linter: untrusted repositories cannot configure dns_search")
 	}
-	if trusted == false && len(container.ExtraHosts) > 0 {
+	if trusted && len(container.ExtraHosts) > 0 {
 		return errors.New("linter: untrusted repositories cannot configure extra_hosts")
 	}
-	if trusted == false && len(container.Network) > 0 {
+	if trusted && len(container.Network) > 0 {
 		return errors.New("linter: untrusted repositories cannot configure network_mode")
 	}
 	for _, mount := range container.Volumes {
@@ -176,7 +165,7 @@ func checkPorts(ports []*yaml.Port, trusted bool) error {
 }
 
 func checkPort(port *yaml.Port, trusted bool) error {
-	if trusted == false && port.Host != 0 {
+	if trusted && port.Host != 0 {
 		return errors.New("linter: untrusted repositories cannot map to a host port")
 	}
 	return nil
@@ -205,14 +194,14 @@ func checkVolumes(pipeline *yaml.Pipeline, trusted bool) error {
 }
 
 func checkHostPathVolume(volume *yaml.VolumeHostPath, trusted bool) error {
-	if trusted == false {
+	if trusted {
 		return errors.New("linter: untrusted repositories cannot mount host volumes")
 	}
 	return nil
 }
 
 func checkEmptyDirVolume(volume *yaml.VolumeEmptyDir, trusted bool) error {
-	if trusted == false && volume.Medium == "memory" {
+	if trusted && volume.Medium == "memory" {
 		return errors.New("linter: untrusted repositories cannot mount in-memory volumes")
 	}
 	return nil
