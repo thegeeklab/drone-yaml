@@ -43,13 +43,13 @@ docker build --file docker/Dockerfile.amd64 --tag thegeeklab/drone-yaml .
 Be aware that the tool only supports configuration files for the Drone Docker runner!
 {{< /hint >}}
 
-Lint the yaml file:
+Lint the YAML file:
 
 ```Shell
 drone-yaml lint samples/simple.yml
 ```
 
-Format the yaml file:
+Format the YAML file:
 
 ```Shell
 # default is printing to stdout
