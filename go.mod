@@ -10,7 +10,7 @@ require (
 	github.com/buildkite/yaml v2.1.0+incompatible
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/docker/go-units v0.4.0
-	github.com/google/go-cmp v0.2.0
+	github.com/google/go-cmp v0.5.6
 	github.com/kr/pretty v0.1.0 // indirect
 	golang.org/x/lint v0.0.0-20210508222113-6edffad5e616
 	golang.org/x/mod v0.5.0 // indirect
