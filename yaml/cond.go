@@ -3,7 +3,7 @@
 
 package yaml
 
-import filepath "github.com/bmatcuk/doublestar"
+import filepath "github.com/bmatcuk/doublestar/v4"
 
 // Conditions defines a group of conditions.
 type Conditions struct {
