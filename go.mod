@@ -18,5 +18,5 @@ require (
 	golang.org/x/tools v0.1.6 // indirect
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
 	gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127 // indirect
-	honnef.co/go/tools v0.2.1
+	honnef.co/go/tools v0.2.2
 )
