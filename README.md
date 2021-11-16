@@ -8,7 +8,7 @@ Custom Drone YAML formatter
 [![Go Report Card](https://goreportcard.com/badge/github.com/thegeeklab/drone-yaml)](https://goreportcard.com/report/github.com/thegeeklab/drone-yaml)
 [![GitHub contributors](https://img.shields.io/github/contributors/thegeeklab/drone-yaml)](https://github.com/thegeeklab/drone-yaml/graphs/contributors)
 [![Source: GitHub](https://img.shields.io/badge/source-github-blue.svg?logo=github&logoColor=white)](https://github.com/thegeeklab/drone-yaml)
-[![License: MIT](https://img.shields.io/github/license/thegeeklab/drone-yaml)](https://github.com/thegeeklab/drone-yaml/blob/main/LICENSE)
+[![License: Apache-2.0](https://img.shields.io/github/license/thegeeklab/drone-yaml)](https://github.com/thegeeklab/drone-yaml/blob/main/LICENSE)
 
 Custom linter and formatter for the [Drone](https://github.com/drone/drone) YAML configuration file format. You can find the full documentation at You can find the full documentation at [https://drone-plugin-index.geekdocs.de](https://drone-plugin-index.geekdocs.de/tools/drone-yaml).
 
@@ -19,4 +19,4 @@ please see the [instructions](https://github.com/thegeeklab/drone-yaml/blob/main
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](https://github.com/thegeeklab/drone-yaml/blob/main/LICENSE) file for details.
+This project is licensed under the Apache-2.0 License - see the [LICENSE](https://github.com/thegeeklab/drone-yaml/blob/main/LICENSE) file for details.
