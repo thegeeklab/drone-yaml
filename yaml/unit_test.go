@@ -6,7 +6,7 @@ package yaml
 import (
 	"testing"
 
-	"github.com/buildkite/yaml"
+	"gopkg.in/yaml.v2"
 )
 
 func TestBytesSize(t *testing.T) {

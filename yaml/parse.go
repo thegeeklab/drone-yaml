@@ -11,7 +11,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/buildkite/yaml"
+	"gopkg.in/yaml.v2"
 )
 
 var errorMissingKind = errors.New("yaml: missing kind attribute")
