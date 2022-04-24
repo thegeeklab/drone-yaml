@@ -9,7 +9,7 @@ require (
 	golang.org/x/lint v0.0.0-20210508222113-6edffad5e616
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
 	gopkg.in/yaml.v2 v2.4.0
-	honnef.co/go/tools v0.3.0
+	honnef.co/go/tools v0.3.1
 )
 
 require (
