@@ -67,7 +67,7 @@ func (c *Condition) Excludes(v string) bool {
 func (c *Condition) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	var out1 string
 	var out2 []string
-	var out3 = struct {
+	out3 := struct {
 		Include []string
 		Exclude []string
 	}{}
@@ -78,14 +78,16 @@ func (c *Condition) UnmarshalYAML(unmarshal func(interface{}) error) error {
 		return nil
 	}
 
-	unmarshal(&out2)
-	unmarshal(&out3)
+	_ = unmarshal(&out2)
+	_ = unmarshal(&out3)
 
-	c.Exclude = out3.Exclude
-	c.Include = append(
+	out3.Include = append(
 		out3.Include,
 		out2...,
 	)
+
+	c.Exclude = out3.Exclude
+	c.Include = out3.Include
 
 	return nil
 }

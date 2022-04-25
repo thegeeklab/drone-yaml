@@ -7,5 +7,5 @@ LABEL org.opencontainers.image.url="https://github.com/thegeeklab/drone-yaml"
 LABEL org.opencontainers.image.source="https://github.com/thegeeklab/drone-yaml"
 LABEL org.opencontainers.image.documentation="https://github.com/thegeeklab/drone-yaml"
 
-ADD release/arm/drone-yaml /bin/
+ADD dist/drone-yaml /bin/
 ENTRYPOINT [ "/bin/drone-yaml" ]

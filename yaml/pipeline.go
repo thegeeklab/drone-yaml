@@ -135,7 +135,7 @@ type (
 		Path string `json:"path,omitempty"`
 	}
 
-	// Workspace represents the pipeline workspace configuraiton.
+	// Workspace represents the pipeline workspace configuration.
 	Workspace struct {
 		Base string `json:"base,omitempty"`
 		Path string `json:"path,omitempty"`

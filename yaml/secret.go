@@ -22,7 +22,7 @@ type (
 	}
 
 	// SecretGet defines a request to get a secret from
-	// an external sevice at the specified path, or with the
+	// an external service at the specified path, or with the
 	// specified name.
 	SecretGet struct {
 		Path string `json:"path,omitempty"`

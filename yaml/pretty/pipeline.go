@@ -9,12 +9,12 @@ import (
 
 // helper function to pretty print the pipeline resource.
 func printPipeline(w writer, v *yaml.Pipeline) {
-	w.WriteString("---")
+	_, _ = w.WriteString("---")
 	w.WriteTagValue("version", v.Version)
 	w.WriteTagValue("kind", v.Kind)
 	w.WriteTagValue("type", v.Type)
 	w.WriteTagValue("name", v.Name)
-	w.WriteByte('\n')
+	_ = w.WriteByte('\n')
 
 	if !isPlatformEmpty(v.Platform) {
 		printPlatform(w, v.Platform)
@@ -61,30 +61,30 @@ func printPipeline(w writer, v *yaml.Pipeline) {
 
 	if len(v.Volumes) != 0 {
 		printVolumes(w, v.Volumes)
-		w.WriteByte('\n')
+		_ = w.WriteByte('\n')
 	}
 
 	if len(v.PullSecrets) > 0 {
 		w.WriteTagValue("image_pull_secrets", v.PullSecrets)
-		w.WriteByte('\n')
+		_ = w.WriteByte('\n')
 	}
 
 	if len(v.Node) > 0 {
 		printNode(w, v.Node)
-		w.WriteByte('\n')
+		_ = w.WriteByte('\n')
 	}
 
 	if !isConditionsEmpty(v.Trigger) {
 		printConditions(w, "trigger", v.Trigger)
-		w.WriteByte('\n')
+		_ = w.WriteByte('\n')
 	}
 
 	if len(v.DependsOn) > 0 {
 		printDependsOn(w, v.DependsOn)
-		w.WriteByte('\n')
+		_ = w.WriteByte('\n')
 	}
 
-	w.WriteByte('\n')
+	_ = w.WriteByte('\n')
 }
 
 // helper function pretty prints the clone block.
@@ -94,7 +94,7 @@ func printClone(w writer, v yaml.Clone) {
 	w.WriteTagValue("depth", v.Depth)
 	w.WriteTagValue("disable", v.Disable)
 	w.WriteTagValue("skip_verify", v.SkipVerify)
-	w.WriteByte('\n')
+	_ = w.WriteByte('\n')
 	w.IndentDecrease()
 }
 
@@ -103,7 +103,7 @@ func printConcurrency(w writer, v yaml.Concurrency) {
 	w.WriteTag("concurrency")
 	w.IndentIncrease()
 	w.WriteTagValue("limit", v.Limit)
-	w.WriteByte('\n')
+	_ = w.WriteByte('\n')
 	w.IndentDecrease()
 }
 
@@ -148,7 +148,7 @@ func printConditions(w writer, name string, v yaml.Conditions) {
 func printCondition(w writer, k string, v yaml.Condition) {
 	w.WriteTag(k)
 	if len(v.Include) != 0 && len(v.Exclude) == 0 {
-		w.WriteByte('\n')
+		_ = w.WriteByte('\n')
 		w.IndentIncrease()
 		w.Indent()
 		writeValue(w, v.Include)
@@ -179,7 +179,7 @@ func printPlatform(w writer, v yaml.Platform) {
 	w.WriteTagValue("arch", v.Arch)
 	w.WriteTagValue("variant", v.Variant)
 	w.WriteTagValue("version", v.Version)
-	w.WriteByte('\n')
+	_ = w.WriteByte('\n')
 	w.IndentDecrease()
 }
 
@@ -190,7 +190,7 @@ func printPlatformDefault(w writer) {
 	w.IndentIncrease()
 	w.WriteTagValue("os", "linux")
 	w.WriteTagValue("arch", "amd64")
-	w.WriteByte('\n')
+	_ = w.WriteByte('\n')
 	w.IndentDecrease()
 }
 
@@ -207,9 +207,9 @@ func printVolumes(w writer, v []*yaml.Volume) {
 		if v := v.EmptyDir; v != nil {
 			s.WriteTag("temp")
 			if isEmptyDirEmpty(v) {
-				w.WriteByte(' ')
-				w.WriteByte('{')
-				w.WriteByte('}')
+				_ = w.WriteByte(' ')
+				_ = w.WriteByte('{')
+				_ = w.WriteByte('}')
 			} else {
 				s.IndentIncrease()
 				s.WriteTagValue("medium", v.Medium)
@@ -236,7 +236,7 @@ func printWorkspace(w writer, v yaml.Workspace) {
 	w.IndentIncrease()
 	w.WriteTagValue("base", v.Base)
 	w.WriteTagValue("path", v.Path)
-	w.WriteByte('\n')
+	_ = w.WriteByte('\n')
 	w.IndentDecrease()
 }
 
