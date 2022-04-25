@@ -13,7 +13,7 @@ import (
 
 // helper function to pretty prints the signature resource.
 func printSecret(w writer, v *yaml.Secret) {
-	w.WriteString("---")
+	_, _ = w.WriteString("---")
 	w.WriteTagValue("version", v.Version)
 	w.WriteTagValue("kind", v.Kind)
 	w.WriteTagValue("type", v.Type)
@@ -24,11 +24,11 @@ func printSecret(w writer, v *yaml.Secret) {
 	}
 	if !isSecretGetEmpty(v.Get) {
 		w.WriteTagValue("name", v.Name)
-		w.WriteByte('\n')
+		_ = w.WriteByte('\n')
 		printGet(w, v.Get)
 	}
-	w.WriteByte('\n')
-	w.WriteByte('\n')
+	_ = w.WriteByte('\n')
+	_ = w.WriteByte('\n')
 }
 
 // helper function prints the get block.
@@ -43,14 +43,14 @@ func printGet(w writer, v yaml.SecretGet) {
 
 func printData(w writer, d string) {
 	w.WriteTag("data")
-	w.WriteByte(' ')
-	w.WriteByte('>')
+	_ = w.WriteByte(' ')
+	_ = w.WriteByte('>')
 	w.IndentIncrease()
 	d = spaceReplacer.Replace(d)
 	for _, s := range chunk(d, 60) {
-		w.WriteByte('\n')
+		_ = w.WriteByte('\n')
 		w.Indent()
-		w.WriteString(s)
+		_, _ = w.WriteString(s)
 	}
 	w.IndentDecrease()
 }

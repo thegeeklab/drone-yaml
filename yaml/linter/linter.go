@@ -26,7 +26,7 @@ var arch = map[string]struct{}{
 var ErrDuplicateStepName = errors.New("linter: duplicate step names")
 
 // ErrMissingDependency is returned when a Pipeline step
-// defines dependencies that are invlid or unknown.
+// defines dependencies that are invalid or unknown.
 var ErrMissingDependency = errors.New("linter: invalid or unknown step dependency")
 
 // ErrCyclicalDependency is returned when a Pipeline step

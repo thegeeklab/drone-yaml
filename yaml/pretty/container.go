@@ -64,7 +64,7 @@ func printContainer(w writer, v *yaml.Container) {
 	if len(v.DependsOn) > 0 {
 		printDependsOn(w, v.DependsOn)
 	}
-	w.WriteByte('\n')
+	_ = w.WriteByte('\n')
 	w.IndentDecrease()
 }
 
@@ -132,10 +132,10 @@ func printPorts(w writer, v []*yaml.Port) {
 	w.WriteTag("ports")
 	for _, v := range v {
 		if shortPort(v) {
-			w.WriteByte('\n')
+			_ = w.WriteByte('\n')
 			w.Indent()
-			w.WriteByte('-')
-			w.WriteByte(' ')
+			_ = w.WriteByte('-')
+			_ = w.WriteByte(' ')
 			writeInt(w, v.Port)
 			continue
 		}

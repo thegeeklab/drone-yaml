@@ -71,7 +71,7 @@ type baseWriter struct {
 
 func (w *baseWriter) Indent() {
 	for i := 0; i < w.depth; i++ {
-		w.WriteString("  ")
+		_, _ = w.WriteString("  ")
 	}
 }
 
@@ -92,10 +92,10 @@ func (w *baseWriter) ExcludeZero() {
 }
 
 func (w *baseWriter) WriteTag(v interface{}) {
-	w.WriteByte('\n')
+	_ = w.WriteByte('\n')
 	w.Indent()
 	writeValue(w, v)
-	w.WriteByte(':')
+	_ = w.WriteByte(':')
 }
 
 func (w *baseWriter) WriteTagValue(k, v interface{}) {
@@ -103,18 +103,19 @@ func (w *baseWriter) WriteTagValue(k, v interface{}) {
 		return
 	}
 	w.WriteTag(k)
-	if isPrimative(v) {
-		w.WriteByte(' ')
+	switch {
+	case isPrimative(v):
+		_ = w.WriteByte(' ')
 		writeValue(w, v)
-	} else if isSlice(v) {
-		w.WriteByte('\n')
+	case isSlice(v):
+		_ = w.WriteByte('\n')
 		w.IndentIncrease()
 		w.Indent()
 		writeValue(w, v)
 		w.IndentDecrease()
-	} else {
+	default:
 		w.depth++
-		w.WriteByte('\n')
+		_ = w.WriteByte('\n')
 		w.Indent()
 		writeValue(w, v)
 		w.depth--
@@ -140,18 +141,18 @@ func (w *indexWriter) ExcludeZero() {
 }
 
 func (w *indexWriter) WriteTag(v interface{}) {
-	w.WriteByte('\n')
+	_ = w.WriteByte('\n')
 	if w.index == 0 {
 		w.IndentDecrease()
 		w.Indent()
 		w.IndentIncrease()
-		w.WriteByte('-')
-		w.WriteByte(' ')
+		_ = w.WriteByte('-')
+		_ = w.WriteByte(' ')
 	} else {
 		w.Indent()
 	}
 	writeValue(w, v)
-	w.WriteByte(':')
+	_ = w.WriteByte(':')
 	w.index++
 }
 
@@ -160,18 +161,19 @@ func (w *indexWriter) WriteTagValue(k, v interface{}) {
 		return
 	}
 	w.WriteTag(k)
-	if isPrimative(v) {
-		w.WriteByte(' ')
+	switch {
+	case isPrimative(v):
+		_ = w.WriteByte(' ')
 		writeValue(w, v)
-	} else if isSlice(v) {
-		w.WriteByte('\n')
+	case isSlice(v):
+		_ = w.WriteByte('\n')
 		w.IndentIncrease()
 		w.Indent()
 		writeValue(w, v)
 		w.IndentDecrease()
-	} else {
+	default:
 		w.IndentIncrease()
-		w.WriteByte('\n')
+		_ = w.WriteByte('\n')
 		w.Indent()
 		writeValue(w, v)
 		w.IndentDecrease()
@@ -183,45 +185,45 @@ func (w *indexWriter) WriteTagValue(k, v interface{}) {
 //
 
 func writeBool(w writer, v bool) {
-	w.WriteString(
+	_, _ = w.WriteString(
 		strconv.FormatBool(v),
 	)
 }
 
 func writeFloat(w writer, v float64) {
-	w.WriteString(
+	_, _ = w.WriteString(
 		strconv.FormatFloat(v, 'g', -1, 64),
 	)
 }
 
 func writeInt(w writer, v int) {
-	w.WriteString(
+	_, _ = w.WriteString(
 		strconv.Itoa(v),
 	)
 }
 
 func writeInt64(w writer, v int64) {
-	w.WriteString(
+	_, _ = w.WriteString(
 		strconv.FormatInt(v, 10),
 	)
 }
 
 func writeEncode(w writer, v string) {
 	if len(v) == 0 {
-		w.WriteByte('"')
-		w.WriteByte('"')
+		_ = w.WriteByte('"')
+		_ = w.WriteByte('"')
 		return
 	}
 	if isQuoted(v) {
 		fmt.Fprintf(w, "%q", v)
 	} else {
-		w.WriteString(v)
+		_, _ = w.WriteString(v)
 	}
 }
 
 func writeValue(w writer, v interface{}) {
 	if v == nil {
-		w.WriteByte('~')
+		_ = w.WriteByte('~')
 		return
 	}
 	switch v := v.(type) {
@@ -257,17 +259,17 @@ func writeScalar(w writer, v interface{}) {
 
 func writeSequence(w writer, v []interface{}) {
 	if len(v) == 0 {
-		w.WriteByte('[')
-		w.WriteByte(']')
+		_ = w.WriteByte('[')
+		_ = w.WriteByte(']')
 		return
 	}
 	for i, v := range v {
 		if i != 0 {
-			w.WriteByte('\n')
+			_ = w.WriteByte('\n')
 			w.Indent()
 		}
-		w.WriteByte('-')
-		w.WriteByte(' ')
+		_ = w.WriteByte('-')
+		_ = w.WriteByte(' ')
 		w.IndentIncrease()
 		writeValue(w, v)
 		w.IndentDecrease()
@@ -276,25 +278,25 @@ func writeSequence(w writer, v []interface{}) {
 
 func writeSequenceStr(w writer, v []string) {
 	if len(v) == 0 {
-		w.WriteByte('[')
-		w.WriteByte(']')
+		_ = w.WriteByte('[')
+		_ = w.WriteByte(']')
 		return
 	}
 	for i, v := range v {
 		if i != 0 {
-			w.WriteByte('\n')
+			_ = w.WriteByte('\n')
 			w.Indent()
 		}
-		w.WriteByte('-')
-		w.WriteByte(' ')
+		_ = w.WriteByte('-')
+		_ = w.WriteByte(' ')
 		writeEncode(w, v)
 	}
 }
 
 func writeMapping(w writer, v map[interface{}]interface{}) {
 	if len(v) == 0 {
-		w.WriteByte('{')
-		w.WriteByte('}')
+		_ = w.WriteByte('{')
+		_ = w.WriteByte('}')
 		return
 	}
 	var keys []string
@@ -306,20 +308,20 @@ func writeMapping(w writer, v map[interface{}]interface{}) {
 	for i, k := range keys {
 		v := v[k]
 		if i != 0 {
-			w.WriteByte('\n')
+			_ = w.WriteByte('\n')
 			w.Indent()
 		}
 		writeEncode(w, k)
-		w.WriteByte(':')
+		_ = w.WriteByte(':')
 		if v == nil || isPrimative(v) || isZero(v) {
-			w.WriteByte(' ')
+			_ = w.WriteByte(' ')
 			writeValue(w, v)
 		} else {
 			slice := isSlice(v)
 			if !slice {
 				w.IndentIncrease()
 			}
-			w.WriteByte('\n')
+			_ = w.WriteByte('\n')
 			w.Indent()
 			writeValue(w, v)
 			if !slice {
@@ -331,8 +333,8 @@ func writeMapping(w writer, v map[interface{}]interface{}) {
 
 func writeMappingStr(w writer, v map[string]string) {
 	if len(v) == 0 {
-		w.WriteByte('{')
-		w.WriteByte('}')
+		_ = w.WriteByte('{')
+		_ = w.WriteByte('}')
 		return
 	}
 	var keys []string
@@ -343,12 +345,12 @@ func writeMappingStr(w writer, v map[string]string) {
 	for i, k := range keys {
 		v := v[k]
 		if i != 0 {
-			w.WriteByte('\n')
+			_ = w.WriteByte('\n')
 			w.Indent()
 		}
 		writeEncode(w, k)
-		w.WriteByte(':')
-		w.WriteByte(' ')
+		_ = w.WriteByte(':')
+		_ = w.WriteByte(' ')
 		writeEncode(w, v)
 	}
 }

@@ -26,5 +26,5 @@ func Print(w io.Writer, v *yaml.Manifest) {
 	}
 	state.WriteString("...")
 	state.WriteByte('\n')
-	w.Write(state.Bytes())
+	_, _ = w.Write(state.Bytes())
 }

@@ -46,7 +46,7 @@ func runFormat() error {
 	pretty.Print(b, m)
 
 	if *formatSave {
-		return ioutil.WriteFile(f.Name(), b.Bytes(), 0644)
+		return ioutil.WriteFile(f.Name(), b.Bytes(), 0o644)
 	}
 	_, err = io.Copy(os.Stderr, b)
 	return err

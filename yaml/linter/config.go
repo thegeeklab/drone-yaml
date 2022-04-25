@@ -14,7 +14,7 @@ import (
 var ErrDuplicatePipelineName = errors.New("linter: duplicate pipeline names")
 
 // ErrMissingPipelineDependency is returned when a Pipeline
-// defines dependencies that are invlid or unknown.
+// defines dependencies that are invalid or unknown.
 var ErrMissingPipelineDependency = errors.New("linter: invalid or unknown pipeline dependency")
 
 // ErrCyclicalPipelineDependency is returned when a Pipeline
@@ -51,6 +51,8 @@ func checkPipelines(manifest *yaml.Manifest, trusted bool) error {
 					return err
 				}
 			}
+		default:
+			continue
 		}
 	}
 	return nil
