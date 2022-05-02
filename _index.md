@@ -38,8 +38,7 @@ docker build --file docker/Dockerfile.amd64 --tag thegeeklab/drone-yaml .
 
 ## Usage
 
-{{< hint warning >}}
-**Note**\
+{{< hint type=important >}}
 Be aware that the tool only supports configuration files for the Drone Docker runner!
 {{< /hint >}}
 
