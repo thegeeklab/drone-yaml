@@ -14,7 +14,7 @@ Custom linter and formatter for the [Drone](https://github.com/drone/drone) YAML
 
 ## Contributors
 
-Special thanks goes to all [contributors](https://github.com/thegeeklab/drone-yaml/graphs/contributors). If you would like to contribute, please see the [instructions](https://github.com/thegeeklab/drone-yaml/blob/main/CONTRIBUTING.md).
+Special thanks to all [contributors](https://github.com/thegeeklab/drone-yaml/graphs/contributors). If you would like to contribute, please see the [instructions](https://github.com/thegeeklab/drone-yaml/blob/main/CONTRIBUTING.md).
 
 ## License
 
