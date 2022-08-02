@@ -1,6 +1,6 @@
 module github.com/drone/drone-yaml
 
-go 1.18
+go 1.19
 
 require (
 	github.com/bmatcuk/doublestar/v4 v4.2.0
