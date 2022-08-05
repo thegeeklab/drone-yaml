@@ -6,7 +6,6 @@ package main
 import (
 	"bytes"
 	"io"
-	"io/ioutil"
 	"os"
 
 	"github.com/drone/drone-yaml/yaml"
@@ -46,7 +45,7 @@ func runFormat() error {
 	pretty.Print(b, m)
 
 	if *formatSave {
-		return ioutil.WriteFile(f.Name(), b.Bytes(), 0o644)
+		return os.WriteFile(f.Name(), b.Bytes(), 0o644)
 	}
 	_, err = io.Copy(os.Stderr, b)
 	return err
