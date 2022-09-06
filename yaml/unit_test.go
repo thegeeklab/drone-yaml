@@ -21,7 +21,7 @@ func TestBytesSize(t *testing.T) {
 			text: "1KiB",
 		},
 		{
-			yaml: "100Mi",
+			yaml: "100MiB",
 			size: 104857600,
 			text: "100MiB",
 		},
