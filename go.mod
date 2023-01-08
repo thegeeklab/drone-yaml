@@ -3,7 +3,7 @@ module github.com/drone/drone-yaml
 go 1.19
 
 require (
-	github.com/bmatcuk/doublestar/v4 v4.4.0
+	github.com/bmatcuk/doublestar/v4 v4.6.0
 	github.com/docker/go-units v0.5.0
 	github.com/google/go-cmp v0.5.9
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
