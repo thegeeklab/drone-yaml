@@ -26,7 +26,8 @@ TARGETOS ?= linux
 TARGETARCH ?= amd64
 ifneq ("$(TARGETVARIANT)","")
 GOARM ?= $(subst v,,$(TARGETVARIANT))
-endif ?= netgo
+endif
+TAGS ?= netgo
 
 ifndef VERSION
 	ifneq ($(DRONE_TAG),)
