@@ -32,12 +32,15 @@ func (c *Condition) Match(v string) bool {
 	if c.Excludes(v) {
 		return false
 	}
+
 	if c.Includes(v) {
 		return true
 	}
+
 	if len(c.Include) == 0 {
 		return true
 	}
+
 	return false
 }
 
@@ -49,6 +52,7 @@ func (c *Condition) Includes(v string) bool {
 			return true
 		}
 	}
+
 	return false
 }
 
@@ -60,13 +64,17 @@ func (c *Condition) Excludes(v string) bool {
 			return true
 		}
 	}
+
 	return false
 }
 
 // UnmarshalYAML implements yml unmarshalling.
 func (c *Condition) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	var out1 string
-	var out2 []string
+	var (
+		out1 string
+		out2 []string
+	)
+
 	out3 := struct {
 		Include []string
 		Exclude []string
@@ -75,6 +83,7 @@ func (c *Condition) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	err := unmarshal(&out1)
 	if err == nil {
 		c.Include = []string{out1}
+
 		return nil
 	}
 

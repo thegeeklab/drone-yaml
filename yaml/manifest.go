@@ -20,6 +20,8 @@ const (
 	KindSignature = "signature"
 )
 
+var ErrMarshalNotImplemented = errors.New("yaml: marshal not implemented")
+
 type (
 	// Manifest is a collection of Drone resources.
 	Manifest struct {
@@ -44,6 +46,7 @@ type (
 		Data    []byte `yaml:"-"`
 	}
 
+	//nolint:musttag
 	resource struct {
 		Version string
 		Kind    string `json:"kind"`
@@ -54,17 +57,22 @@ type (
 // UnmarshalJSON implement the json.Unmarshaler.
 func (m *Manifest) UnmarshalJSON(b []byte) error {
 	messages := []json.RawMessage{}
+
 	err := json.Unmarshal(b, &messages)
 	if err != nil {
 		return err
 	}
+
 	for _, message := range messages {
 		res := new(resource)
+
 		err := json.Unmarshal(message, res)
 		if err != nil {
 			return err
 		}
+
 		var obj Resource
+
 		switch res.Kind {
 		case "cron":
 			obj = new(Cron)
@@ -77,12 +85,15 @@ func (m *Manifest) UnmarshalJSON(b []byte) error {
 		default:
 			obj = new(Pipeline)
 		}
+
 		err = json.Unmarshal(message, obj)
 		if err != nil {
 			return err
 		}
+
 		m.Resources = append(m.Resources, obj)
 	}
+
 	return nil
 }
 
@@ -96,17 +107,19 @@ func (m *Manifest) MarshalJSON() ([]byte, error) {
 // documents, and MarshalYAML would otherwise attempt to marshal
 // as a single Yaml document. Use the Encode method instead.
 func (m *Manifest) MarshalYAML() (interface{}, error) {
-	return nil, errors.New("yaml: marshal not implemented")
+	return nil, ErrMarshalNotImplemented
 }
 
 // Encode encodes the manifest in Yaml format.
 func (m *Manifest) Encode() ([]byte, error) {
 	buf := new(bytes.Buffer)
 	enc := yaml.NewEncoder(buf)
+
 	for _, res := range m.Resources {
 		if err := enc.Encode(res); err != nil {
 			return nil, err
 		}
 	}
+
 	return buf.Bytes(), nil
 }

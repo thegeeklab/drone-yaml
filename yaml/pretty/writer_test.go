@@ -13,25 +13,7 @@ import (
 // this unit tests pretty prints a complex yaml structure
 // to ensure we have common use cases covered.
 func TestWriteComplexValue(t *testing.T) {
-	block := map[interface{}]interface{}{}
-	err := yaml.Unmarshal([]byte(testComplexValue), &block)
-	if err != nil {
-		t.Error(err)
-		return
-	}
-
-	b := new(baseWriter)
-	writeValue(b, block)
-	got, want := b.String(), strings.TrimSpace(testComplexValue)
-	if got != want {
-		t.Errorf("Unexpected block format")
-		println(got)
-		println("---")
-		println(want)
-	}
-}
-
-var testComplexValue = `
+	testComplexValue := `
 a: b
 c:
 - d
@@ -57,3 +39,24 @@ x: ~
 z: "#y"
 zz: "\nz\n"
 "{z}": z`
+
+	block := map[interface{}]interface{}{}
+
+	err := yaml.Unmarshal([]byte(testComplexValue), &block)
+	if err != nil {
+		t.Error(err)
+
+		return
+	}
+
+	b := new(baseWriter)
+	writeValue(b, block)
+
+	got, want := b.String(), strings.TrimSpace(testComplexValue)
+	if got != want {
+		t.Errorf("Unexpected block format")
+		println(got)
+		println("---")
+		println(want)
+	}
+}

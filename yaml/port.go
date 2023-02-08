@@ -22,12 +22,15 @@ type (
 // UnmarshalYAML implements yaml unmarshalling.
 func (p *Port) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	out := new(port)
+
 	err := unmarshal(&out.Port)
 	if err != nil {
 		err = unmarshal(&out)
 	}
+
 	p.Port = out.Port
 	p.Host = out.Host
 	p.Protocol = out.Protocol
+
 	return err
 }

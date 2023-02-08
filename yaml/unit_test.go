@@ -34,14 +34,18 @@ func TestBytesSize(t *testing.T) {
 	for _, test := range tests {
 		in := []byte(test.yaml)
 		out := BytesSize(0)
+
 		err := yaml.Unmarshal(in, &out)
 		if err != nil {
 			t.Error(err)
+
 			return
 		}
+
 		if got, want := int64(out), test.size; got != want {
 			t.Errorf("Want byte size %d, got %d", want, got)
 		}
+
 		if got, want := out.String(), test.text; got != want {
 			t.Errorf("Want byte text %s, got %s", want, got)
 		}

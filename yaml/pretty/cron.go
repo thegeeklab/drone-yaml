@@ -23,9 +23,11 @@ func printSpec(w writer, v *yaml.Cron) {
 	w.IndentIncrease()
 	w.WriteTagValue("schedule", v.Spec.Schedule)
 	w.WriteTagValue("branch", v.Spec.Branch)
+
 	if hasDeployment(v) {
 		printDeploy(w, v)
 	}
+
 	w.IndentDecrease()
 }
 
@@ -33,12 +35,12 @@ func printSpec(w writer, v *yaml.Cron) {
 func printDeploy(w writer, v *yaml.Cron) {
 	w.WriteTag("deployment")
 	w.IndentIncrease()
-	w.WriteTagValue("target", v.Spec.Deploy.Target)
+	w.WriteTagValue("target", v.Spec.Deployment.Target)
 	w.IndentDecrease()
 }
 
 // helper function returns true if the deployment
 // object is empty.
 func hasDeployment(v *yaml.Cron) bool {
-	return v.Spec.Deploy.Target != ""
+	return v.Spec.Deployment.Target != ""
 }

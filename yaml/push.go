@@ -19,10 +19,13 @@ type (
 // UnmarshalYAML implements yaml unmarshalling.
 func (p *Push) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	d := new(push)
+
 	err := unmarshal(&d.Image)
 	if err != nil {
 		err = unmarshal(d)
 	}
+
 	p.Image = d.Image
+
 	return err
 }

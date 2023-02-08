@@ -19,6 +19,7 @@ func printContainer(w writer, v *yaml.Container) {
 	if v.Build != nil {
 		printBuild(w, v.Build)
 	}
+
 	if v.Push != nil {
 		w.WriteTagValue("push", v.Push.Image)
 	}
@@ -32,7 +33,7 @@ func printContainer(w writer, v *yaml.Container) {
 	w.WriteTagValue("dns", v.DNS)
 	w.WriteTagValue("dns_search", v.DNSSearch)
 	w.WriteTagValue("extra_hosts", v.ExtraHosts)
-	w.WriteTagValue("network_mode", v.Network)
+	w.WriteTagValue("network_mode", v.NetworkMode)
 
 	if len(v.Settings) > 0 {
 		printSettings(w, v.Settings)
@@ -49,21 +50,27 @@ func printContainer(w writer, v *yaml.Container) {
 	if len(v.Devices) > 0 {
 		printDeviceMounts(w, v.Devices)
 	}
+
 	if len(v.Ports) > 0 {
 		printPorts(w, v.Ports)
 	}
+
 	if v.Resources != nil {
 		printResources(w, v.Resources)
 	}
+
 	if len(v.Volumes) > 0 {
 		printVolumeMounts(w, v.Volumes)
 	}
+
 	if !isConditionsEmpty(v.When) {
 		printConditions(w, "when", v.When)
 	}
+
 	if len(v.DependsOn) > 0 {
 		printDependsOn(w, v.DependsOn)
 	}
+
 	_ = w.WriteByte('\n')
 	w.IndentDecrease()
 }
@@ -93,43 +100,49 @@ func printDependsOn(w writer, v []string) {
 // helper function pretty prints the device sequence.
 func printDeviceMounts(w writer, v []*yaml.VolumeDevice) {
 	w.WriteTag("devices")
+
 	for _, v := range v {
 		s := new(indexWriter)
 		s.writer = w
 		s.IndentIncrease()
 		s.WriteTagValue("name", v.Name)
-		s.WriteTagValue("path", v.DevicePath)
+		s.WriteTagValue("path", v.Path)
 		s.IndentDecrease()
 	}
 }
 
 // helper function pretty prints the environment mapping.
 func printEnviron(w writer, v map[string]*yaml.Variable) {
-	var keys []string
+	keys := make([]string, 0)
+
 	for k := range v {
 		keys = append(keys, k)
 	}
+
 	sort.Strings(keys)
 
 	w.WriteTag("environment")
 	w.IndentIncrease()
+
 	for _, k := range keys {
 		v := v[k]
-		if v.Secret == "" {
+		if v.FromSecret == "" {
 			w.WriteTagValue(k, v.Value)
 		} else {
 			w.WriteTag(k)
 			w.IndentIncrease()
-			w.WriteTagValue("from_secret", v.Secret)
+			w.WriteTagValue("from_secret", v.FromSecret)
 			w.IndentDecrease()
 		}
 	}
+
 	w.IndentDecrease()
 }
 
 // helper function pretty prints the port sequence.
 func printPorts(w writer, v []*yaml.Port) {
 	w.WriteTag("ports")
+
 	for _, v := range v {
 		if shortPort(v) {
 			_ = w.WriteByte('\n')
@@ -137,6 +150,7 @@ func printPorts(w writer, v []*yaml.Port) {
 			_ = w.WriteByte('-')
 			_ = w.WriteByte(' ')
 			writeInt(w, v.Port)
+
 			continue
 		}
 
@@ -162,6 +176,7 @@ func printResources(w writer, v *yaml.Resources) {
 		w.WriteTagValue("memory", v.Limits.Memory)
 		w.IndentDecrease()
 	}
+
 	if v.Requests != nil {
 		w.WriteTag("requests")
 		w.IndentIncrease()
@@ -169,38 +184,44 @@ func printResources(w writer, v *yaml.Resources) {
 		w.WriteTagValue("memory", v.Requests.Memory)
 		w.IndentDecrease()
 	}
+
 	w.IndentDecrease()
 }
 
 // helper function pretty prints the resoure mapping.
 func printSettings(w writer, v map[string]*yaml.Parameter) {
-	var keys []string
+	keys := make([]string, 0)
+
 	for k := range v {
 		keys = append(keys, k)
 	}
+
 	sort.Strings(keys)
 
 	w.WriteTag("settings")
 	w.IndentIncrease()
+
 	for _, k := range keys {
 		v := v[k]
-		if v.Secret == "" {
+		if v.FromSecret == "" {
 			w.IncludeZero()
 			w.WriteTagValue(k, v.Value)
 			w.ExcludeZero()
 		} else {
 			w.WriteTag(k)
 			w.IndentIncrease()
-			w.WriteTagValue("from_secret", v.Secret)
+			w.WriteTagValue("from_secret", v.FromSecret)
 			w.IndentDecrease()
 		}
 	}
+
 	w.IndentDecrease()
 }
 
 // helper function pretty prints the volume sequence.
 func printVolumeMounts(w writer, v []*yaml.VolumeMount) {
 	w.WriteTag("volumes")
+
 	for _, v := range v {
 		s := new(indexWriter)
 		s.writer = w
@@ -208,7 +229,7 @@ func printVolumeMounts(w writer, v []*yaml.VolumeMount) {
 		s.IndentIncrease()
 
 		s.WriteTagValue("name", v.Name)
-		s.WriteTagValue("path", v.MountPath)
+		s.WriteTagValue("path", v.Path)
 
 		s.IndentDecrease()
 		w.IndentDecrease()

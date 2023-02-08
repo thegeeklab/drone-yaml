@@ -15,6 +15,7 @@ import (
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
+//nolint:gochecknoglobals
 var (
 	format     = kingpin.Command("fmt", "format the yaml file")
 	formatSave = format.Flag("save", "save result to source").Short('s').Bool()
@@ -24,6 +25,8 @@ var (
 	lintPriv = lint.Flag("privileged", "privileged mode").Short('p').Bool()
 	lintFile = lint.Arg("source", "source file location").Default(".drone.yml").File()
 )
+
+const DefaultFilePerm = 0o640
 
 func main() {
 	switch kingpin.Parse() {
@@ -36,6 +39,7 @@ func main() {
 
 func runFormat() error {
 	f := *formatFile
+
 	m, err := yaml.Parse(f)
 	if err != nil {
 		return err
@@ -45,23 +49,28 @@ func runFormat() error {
 	pretty.Print(b, m)
 
 	if *formatSave {
-		return os.WriteFile(f.Name(), b.Bytes(), 0o644)
+		return os.WriteFile(f.Name(), b.Bytes(), DefaultFilePerm)
 	}
+
 	_, err = io.Copy(os.Stderr, b)
+
 	return err
 }
 
 func runLint() error {
 	f := *lintFile
+
 	m, err := yaml.Parse(f)
 	if err != nil {
 		return err
 	}
+
 	for _, r := range m.Resources {
 		err := linter.Lint(r, *lintPriv)
 		if err != nil {
 			return err
 		}
 	}
+
 	return nil
 }

@@ -5,9 +5,6 @@ package yaml
 
 import "errors"
 
-// TODO(bradrydzewski) deprecate Secret
-// TODO(bradrydzewski) deprecate ExternalData
-
 type (
 	// Secret is a resource that provides encrypted data
 	// and pointers to external data (i.e. from vault).
@@ -38,6 +35,8 @@ type (
 	}
 )
 
+var ErrInvalidSecret = errors.New("yaml: invalid secret resource")
+
 // GetVersion returns the resource version.
 func (s *Secret) GetVersion() string { return s.Version }
 
@@ -47,7 +46,8 @@ func (s *Secret) GetKind() string { return s.Kind }
 // Validate returns an error if the secret is invalid.
 func (s *Secret) Validate() error {
 	if len(s.Data) == 0 && len(s.Get.Path) == 0 && len(s.Get.Name) == 0 {
-		return errors.New("yaml: invalid secret resource")
+		return ErrInvalidSecret
 	}
+
 	return nil
 }

@@ -5,6 +5,8 @@ package yaml
 
 import "errors"
 
+var ErrInvlaidCronBranch = errors.New("yaml: invalid cron branch")
+
 type (
 	// Cron is a resource that defines a cron job, used
 	// to execute pipelines at scheduled intervals.
@@ -19,9 +21,9 @@ type (
 
 	// CronSpec defines the cron job.
 	CronSpec struct {
-		Schedule string         `json:"schedule,omitempty"`
-		Branch   string         `json:"branch,omitempty"`
-		Deploy   CronDeployment `json:"deployment,omitempty" yaml:"deployment"`
+		Schedule   string         `json:"schedule,omitempty"`
+		Branch     string         `json:"branch,omitempty"`
+		Deployment CronDeployment `json:"deployment,omitempty" yaml:"deployment"`
 	}
 
 	// CronDeployment defines a cron job deployment.
@@ -40,7 +42,7 @@ func (c *Cron) GetKind() string { return c.Kind }
 func (c Cron) Validate() error {
 	switch {
 	case c.Spec.Branch == "":
-		return errors.New("yaml: invalid cron branch")
+		return ErrInvlaidCronBranch
 	default:
 		return nil
 	}

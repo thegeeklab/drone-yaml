@@ -17,6 +17,8 @@ type (
 	}
 )
 
+var ErrInvalidSignature = errors.New("yaml: invalid signature due to missing hash")
+
 // GetVersion returns the resource version.
 func (s *Signature) GetVersion() string { return s.Version }
 
@@ -26,7 +28,8 @@ func (s *Signature) GetKind() string { return s.Kind }
 // Validate returns an error if the signature is invalid.
 func (s Signature) Validate() error {
 	if s.Hmac == "" {
-		return errors.New("yaml: invalid signature. missing hash")
+		return ErrInvalidSignature
 	}
+
 	return nil
 }
