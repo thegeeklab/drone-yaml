@@ -8,11 +8,10 @@ import (
 	"io"
 	"os"
 
+	"github.com/alecthomas/kingpin/v2"
 	"github.com/drone/drone-yaml/yaml"
 	"github.com/drone/drone-yaml/yaml/linter"
 	"github.com/drone/drone-yaml/yaml/pretty"
-
-	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 //nolint:gochecknoglobals
