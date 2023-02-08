@@ -10,29 +10,49 @@ import (
 	"github.com/drone/drone-yaml/yaml"
 )
 
-var os = map[string]struct{}{
-	"linux":   {},
-	"windows": {},
-}
+//nolint:gochecknoglobals
+var (
+	os = map[string]struct{}{
+		"linux":   {},
+		"windows": {},
+	}
+	arch = map[string]struct{}{
+		"arm":   {},
+		"arm64": {},
+		"amd64": {},
+	}
+)
 
-var arch = map[string]struct{}{
-	"arm":   {},
-	"arm64": {},
-	"amd64": {},
-}
+var (
+	// ErrDuplicateStepName is returned when two Pipeline steps
+	// have the same name.
+	ErrDuplicateStepName = errors.New("linter: duplicate step names")
 
-// ErrDuplicateStepName is returned when two Pipeline steps
-// have the same name.
-var ErrDuplicateStepName = errors.New("linter: duplicate step names")
+	// ErrMissingDependency is returned when a Pipeline step
+	// defines dependencies that are invalid or unknown.
+	ErrMissingDependency = errors.New("linter: invalid or unknown step dependency")
 
-// ErrMissingDependency is returned when a Pipeline step
-// defines dependencies that are invalid or unknown.
-var ErrMissingDependency = errors.New("linter: invalid or unknown step dependency")
+	// ErrCyclicalDependency is returned when a Pipeline step
+	// defines a cyclical dependency, which would result in an
+	// infinite execution loop.
+	ErrCyclicalDependency = errors.New("linter: cyclical step dependency detected")
 
-// ErrCyclicalDependency is returned when a Pipeline step
-// defines a cyclical dependency, which would result in an
-// infinite execution loop.
-var ErrCyclicalDependency = errors.New("linter: cyclical step dependency detected")
+	ErrUnsupportedOS         = errors.New("linter: unsupported os")
+	ErrUnsupportedArch       = errors.New("linter: unsupported architecture")
+	ErrInvalidImage          = errors.New("linter: invalid or missing image")
+	ErrInvalidBuildImage     = errors.New("linter: invalid or missing build image")
+	ErrInvalidName           = errors.New("linter: invalid or missing name")
+	ErrPrivilegedNotAllowed  = errors.New("linter: untrusted repositories cannot enable privileged mode")
+	ErrMountNotAllowed       = errors.New("linter: untrusted repositories cannot mount devices")
+	ErrDNSNotAllowed         = errors.New("linter: untrusted repositories cannot configure dns")
+	ErrDNSSearchNotAllowed   = errors.New("linter: untrusted repositories cannot configure dns_search")
+	ErrExtraHostsNotAllowed  = errors.New("linter: untrusted repositories cannot configure extra_hosts")
+	ErrNetworkModeNotAllowed = errors.New("linter: untrusted repositories cannot configure network_mode")
+	ErrInvalidVolumeName     = errors.New("linter: invalid volume name")
+	ErrHostPortNotAllowed    = errors.New("linter: untrusted repositories cannot map to a host port")
+	ErrHostVolumeNotAllowed  = errors.New("linter: untrusted repositories cannot mount host volumes")
+	ErrTempVolumeNotAllowed  = errors.New("linter: untrusted repositories cannot mount in-memory volumes")
+)
 
 // Lint performs lint operations for a resource.
 func Lint(resource yaml.Resource, trusted bool) error {
@@ -57,19 +77,23 @@ func checkPipeline(pipeline *yaml.Pipeline, trusted bool) error {
 	if err != nil {
 		return err
 	}
+
 	err = checkPlatform(pipeline.Platform)
 	if err != nil {
 		return err
 	}
+
 	names := map[string]struct{}{}
 	if !pipeline.Clone.Disable {
 		names["clone"] = struct{}{}
 	}
+
 	for _, container := range pipeline.Steps {
 		_, ok := names[container.Name]
 		if ok {
 			return ErrDuplicateStepName
 		}
+
 		names[container.Name] = struct{}{}
 
 		err := checkContainer(container, trusted)
@@ -82,11 +106,13 @@ func checkPipeline(pipeline *yaml.Pipeline, trusted bool) error {
 			return err
 		}
 	}
+
 	for _, container := range pipeline.Services {
 		_, ok := names[container.Name]
 		if ok {
 			return ErrDuplicateStepName
 		}
+
 		names[container.Name] = struct{}{}
 
 		err := checkContainer(container, trusted)
@@ -94,6 +120,7 @@ func checkPipeline(pipeline *yaml.Pipeline, trusted bool) error {
 			return err
 		}
 	}
+
 	return nil
 }
 
@@ -101,15 +128,17 @@ func checkPlatform(platform yaml.Platform) error {
 	if v := platform.OS; v != "" {
 		_, ok := os[v]
 		if !ok {
-			return fmt.Errorf("linter: unsupported os: %s", v)
+			return fmt.Errorf("%w: %s", ErrUnsupportedOS, v)
 		}
 	}
+
 	if v := platform.Arch; v != "" {
 		_, ok := arch[v]
 		if !ok {
-			return fmt.Errorf("linter: unsupported architecture: %s", v)
+			return fmt.Errorf("%w: %s", ErrUnsupportedArch, v)
 		}
 	}
+
 	return nil
 }
 
@@ -118,39 +147,50 @@ func checkContainer(container *yaml.Container, trusted bool) error {
 	if err != nil {
 		return err
 	}
+
 	if container.Build == nil && container.Image == "" {
-		return errors.New("linter: invalid or missing image")
+		return ErrInvalidImage
 	}
+
 	if container.Build != nil && container.Build.Image == "" {
-		return errors.New("linter: invalid or missing build image")
+		return ErrInvalidBuildImage
 	}
+
 	if container.Name == "" {
-		return errors.New("linter: invalid or missing name")
+		return ErrInvalidName
 	}
+
 	if trusted && container.Privileged {
-		return errors.New("linter: untrusted repositories cannot enable privileged mode")
+		return ErrPrivilegedNotAllowed
 	}
+
 	if trusted && len(container.Devices) > 0 {
-		return errors.New("linter: untrusted repositories cannot mount devices")
+		return ErrMountNotAllowed
 	}
+
 	if trusted && len(container.DNS) > 0 {
-		return errors.New("linter: untrusted repositories cannot configure dns")
+		return ErrDNSNotAllowed
 	}
+
 	if trusted && len(container.DNSSearch) > 0 {
-		return errors.New("linter: untrusted repositories cannot configure dns_search")
+		return ErrDNSSearchNotAllowed
 	}
+
 	if trusted && len(container.ExtraHosts) > 0 {
-		return errors.New("linter: untrusted repositories cannot configure extra_hosts")
+		return ErrExtraHostsNotAllowed
 	}
-	if trusted && len(container.Network) > 0 {
-		return errors.New("linter: untrusted repositories cannot configure network_mode")
+
+	if trusted && len(container.NetworkMode) > 0 {
+		return ErrNetworkModeNotAllowed
 	}
+
 	for _, mount := range container.Volumes {
 		switch mount.Name {
 		case "workspace", "_workspace", "_docker_socket":
-			return fmt.Errorf("linter: invalid volume name: %s", mount.Name)
+			return fmt.Errorf("%w: %s", ErrInvalidVolumeName, mount.Name)
 		}
 	}
+
 	return nil
 }
 
@@ -161,49 +201,56 @@ func checkPorts(ports []*yaml.Port, trusted bool) error {
 			return err
 		}
 	}
+
 	return nil
 }
 
 func checkPort(port *yaml.Port, trusted bool) error {
 	if trusted && port.Host != 0 {
-		return errors.New("linter: untrusted repositories cannot map to a host port")
+		return ErrHostPortNotAllowed
 	}
+
 	return nil
 }
 
 func checkVolumes(pipeline *yaml.Pipeline, trusted bool) error {
 	for _, volume := range pipeline.Volumes {
-		if volume.EmptyDir != nil {
-			err := checkEmptyDirVolume(volume.EmptyDir, trusted)
+		if volume.Temp != nil {
+			err := checkEmptyDirVolume(volume.Temp, trusted)
 			if err != nil {
 				return err
 			}
 		}
-		if volume.HostPath != nil {
-			err := checkHostPathVolume(volume.HostPath, trusted)
+
+		if volume.Host != nil {
+			err := checkHostPathVolume(trusted)
 			if err != nil {
 				return err
 			}
 		}
+
 		switch volume.Name {
 		case "workspace", "_workspace", "_docker_socket":
-			return fmt.Errorf("linter: invalid volume name: %s", volume.Name)
+			return fmt.Errorf("%w: %s", ErrInvalidVolumeName, volume.Name)
 		}
 	}
+
 	return nil
 }
 
-func checkHostPathVolume(volume *yaml.VolumeHostPath, trusted bool) error {
+func checkHostPathVolume(trusted bool) error {
 	if trusted {
-		return errors.New("linter: untrusted repositories cannot mount host volumes")
+		return ErrHostVolumeNotAllowed
 	}
+
 	return nil
 }
 
 func checkEmptyDirVolume(volume *yaml.VolumeEmptyDir, trusted bool) error {
 	if trusted && volume.Medium == "memory" {
-		return errors.New("linter: untrusted repositories cannot mount in-memory volumes")
+		return ErrTempVolumeNotAllowed
 	}
+
 	return nil
 }
 
@@ -213,9 +260,11 @@ func checkDeps(container *yaml.Container, deps map[string]struct{}) error {
 		if !ok {
 			return ErrMissingDependency
 		}
+
 		if container.Name == dep {
 			return ErrCyclicalDependency
 		}
 	}
+
 	return nil
 }

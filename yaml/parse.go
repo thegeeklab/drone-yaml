@@ -14,7 +14,7 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-var errorMissingKind = errors.New("yaml: missing kind attribute")
+var ErrMissingKind = errors.New("yaml: missing kind attribute")
 
 // Parse parses the configuration from io.Reader r.
 func Parse(r io.Reader) (*Manifest, error) {
@@ -22,23 +22,29 @@ func Parse(r io.Reader) (*Manifest, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	manifest := new(Manifest)
+
 	for _, raw := range resources {
 		if raw == nil {
 			continue
 		}
+
 		resource, err := parseRaw(raw)
 		if err != nil {
 			return nil, err
 		}
+
 		if resource.GetKind() == "" {
-			return nil, errorMissingKind
+			return nil, ErrMissingKind
 		}
+
 		manifest.Resources = append(
 			manifest.Resources,
 			resource,
 		)
 	}
+
 	return manifest, nil
 }
 
@@ -63,11 +69,13 @@ func ParseFile(p string) (*Manifest, error) {
 		return nil, err
 	}
 	defer f.Close()
+
 	return Parse(f)
 }
 
-func parseRaw(r *RawResource) (Resource, error) {
+func parseRaw(r *RawResource) (Resource, error) { //nolint:ireturn
 	var obj Resource
+
 	switch r.Kind {
 	case "cron":
 		obj = new(Cron)
@@ -80,7 +88,9 @@ func parseRaw(r *RawResource) (Resource, error) {
 	default:
 		obj = new(Pipeline)
 	}
+
 	err := yaml.Unmarshal(r.Data, obj)
+
 	return obj, err
 }
 
@@ -88,8 +98,11 @@ func parseRaw(r *RawResource) (Resource, error) {
 // io.Reader and returns a slice of raw resources.
 func ParseRaw(r io.Reader) ([]*RawResource, error) {
 	const newline = '\n'
-	var resources []*RawResource
-	var resource *RawResource
+
+	var (
+		resources []*RawResource
+		resource  *RawResource
+	)
 
 	scanner := bufio.NewScanner(r)
 	for scanner.Scan() {
@@ -97,34 +110,42 @@ func ParseRaw(r io.Reader) ([]*RawResource, error) {
 		if isSeparator(line) {
 			resource = nil
 		}
+
 		if resource == nil {
 			resource = &RawResource{}
 			resources = append(resources, resource)
 		}
+
 		if isSeparator(line) {
 			continue
 		}
+
 		if isTerminator(line) {
 			break
 		}
-		if scanner.Err() == io.EOF {
+
+		if errors.Is(scanner.Err(), io.EOF) {
 			break
 		}
+
 		resource.Data = append(
 			resource.Data,
 			line...,
 		)
+
 		resource.Data = append(
 			resource.Data,
 			newline,
 		)
 	}
+
 	for _, resource := range resources {
 		err := yaml.Unmarshal(resource.Data, resource)
 		if err != nil {
 			return nil, err
 		}
 	}
+
 	return resources, nil
 }
 
@@ -152,6 +173,7 @@ func ParseRawFile(p string) ([]*RawResource, error) {
 		return nil, err
 	}
 	defer f.Close()
+
 	return ParseRaw(f)
 }
 

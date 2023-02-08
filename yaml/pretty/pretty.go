@@ -12,6 +12,7 @@ import (
 // Print pretty prints the manifest.
 func Print(w io.Writer, v *yaml.Manifest) {
 	state := new(baseWriter)
+
 	for _, r := range v.Resources {
 		switch t := r.(type) {
 		case *yaml.Cron:
@@ -24,6 +25,7 @@ func Print(w io.Writer, v *yaml.Manifest) {
 			printPipeline(state, t)
 		}
 	}
+
 	state.WriteString("...")
 	state.WriteByte('\n')
 	_, _ = w.Write(state.Bytes())

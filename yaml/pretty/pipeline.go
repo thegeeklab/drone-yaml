@@ -21,22 +21,27 @@ func printPipeline(w writer, v *yaml.Pipeline) {
 	} else {
 		printPlatformDefault(w)
 	}
+
 	if !isCloneEmpty(v.Clone) {
 		printClone(w, v.Clone)
 	}
+
 	if !isConcurrencyEmpty(v.Concurrency) {
 		printConcurrency(w, v.Concurrency)
 	}
+
 	if !isWorkspaceEmpty(v.Workspace) {
 		printWorkspace(w, v.Workspace)
 	}
 
 	if len(v.Steps) > 0 {
 		w.WriteTag("steps")
+
 		for _, step := range v.Steps {
 			if step == nil {
 				continue
 			}
+
 			seq := new(indexWriter)
 			seq.writer = w
 			seq.IndentIncrease()
@@ -47,10 +52,12 @@ func printPipeline(w writer, v *yaml.Pipeline) {
 
 	if len(v.Services) > 0 {
 		w.WriteTag("services")
+
 		for _, step := range v.Services {
 			if step == nil {
 				continue
 			}
+
 			seq := new(indexWriter)
 			seq.writer = w
 			seq.IndentIncrease()
@@ -64,8 +71,8 @@ func printPipeline(w writer, v *yaml.Pipeline) {
 		_ = w.WriteByte('\n')
 	}
 
-	if len(v.PullSecrets) > 0 {
-		w.WriteTagValue("image_pull_secrets", v.PullSecrets)
+	if len(v.ImagePullSecrets) > 0 {
+		w.WriteTagValue("image_pull_secrets", v.ImagePullSecrets)
 		_ = w.WriteByte('\n')
 	}
 
@@ -111,42 +118,54 @@ func printConcurrency(w writer, v yaml.Concurrency) {
 func printConditions(w writer, name string, v yaml.Conditions) {
 	w.WriteTag(name)
 	w.IndentIncrease()
+
 	if !isConditionEmpty(v.Action) {
 		printCondition(w, "action", v.Action)
 	}
+
 	if !isConditionEmpty(v.Branch) {
 		printCondition(w, "branch", v.Branch)
 	}
+
 	if !isConditionEmpty(v.Cron) {
 		printCondition(w, "cron", v.Cron)
 	}
+
 	if !isConditionEmpty(v.Event) {
 		printCondition(w, "event", v.Event)
 	}
+
 	if !isConditionEmpty(v.Instance) {
 		printCondition(w, "instance", v.Instance)
 	}
+
 	if !isConditionEmpty(v.Paths) {
 		printCondition(w, "paths", v.Paths)
 	}
+
 	if !isConditionEmpty(v.Ref) {
 		printCondition(w, "ref", v.Ref)
 	}
+
 	if !isConditionEmpty(v.Repo) {
 		printCondition(w, "repo", v.Repo)
 	}
+
 	if !isConditionEmpty(v.Status) {
 		printCondition(w, "status", v.Status)
 	}
+
 	if !isConditionEmpty(v.Target) {
 		printCondition(w, "target", v.Target)
 	}
+
 	w.IndentDecrease()
 }
 
 // helper function pretty prints a condition mapping.
 func printCondition(w writer, k string, v yaml.Condition) {
 	w.WriteTag(k)
+
 	if len(v.Include) != 0 && len(v.Exclude) == 0 {
 		_ = w.WriteByte('\n')
 		w.IndentIncrease()
@@ -154,11 +173,13 @@ func printCondition(w writer, k string, v yaml.Condition) {
 		writeValue(w, v.Include)
 		w.IndentDecrease()
 	}
+
 	if len(v.Include) != 0 && len(v.Exclude) != 0 {
 		w.IndentIncrease()
 		w.WriteTagValue("include", v.Include)
 		w.IndentDecrease()
 	}
+
 	if len(v.Exclude) != 0 {
 		w.IndentIncrease()
 		w.WriteTagValue("exclude", v.Exclude)
@@ -197,6 +218,7 @@ func printPlatformDefault(w writer) {
 // helper function pretty prints the volume sequence.
 func printVolumes(w writer, v []*yaml.Volume) {
 	w.WriteTag("volumes")
+
 	for _, v := range v {
 		s := new(indexWriter)
 		s.writer = w
@@ -204,8 +226,10 @@ func printVolumes(w writer, v []*yaml.Volume) {
 		s.IndentIncrease()
 
 		s.WriteTagValue("name", v.Name)
-		if v := v.EmptyDir; v != nil {
+
+		if v := v.Temp; v != nil {
 			s.WriteTag("temp")
+
 			if isEmptyDirEmpty(v) {
 				_ = w.WriteByte(' ')
 				_ = w.WriteByte('{')
@@ -218,7 +242,7 @@ func printVolumes(w writer, v []*yaml.Volume) {
 			}
 		}
 
-		if v := v.HostPath; v != nil {
+		if v := v.Host; v != nil {
 			s.WriteTag("host")
 			s.IndentIncrease()
 			s.WriteTagValue("path", v.Path)

@@ -17,6 +17,7 @@ func (b *BytesSize) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	var intType int64
 	if err := unmarshal(&intType); err == nil {
 		*b = BytesSize(intType)
+
 		return nil
 	}
 
@@ -29,6 +30,7 @@ func (b *BytesSize) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	if err == nil {
 		*b = BytesSize(intType)
 	}
+
 	return err
 }
 

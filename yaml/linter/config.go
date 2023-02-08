@@ -28,11 +28,12 @@ var ErrPipelineSelfDependency = errors.New("linter: pipeline cannot have a depen
 
 // Manifest performs lint operations for a manifest.
 func Manifest(manifest *yaml.Manifest, trusted bool) error {
-	return checkPipelines(manifest, trusted)
+	return checkPipelines(manifest)
 }
 
-func checkPipelines(manifest *yaml.Manifest, trusted bool) error {
+func checkPipelines(manifest *yaml.Manifest) error {
 	names := map[string]struct{}{}
+
 	for _, resource := range manifest.Resources {
 		switch v := resource.(type) {
 		case *yaml.Pipeline:
@@ -40,11 +41,14 @@ func checkPipelines(manifest *yaml.Manifest, trusted bool) error {
 			if ok {
 				return ErrDuplicatePipelineName
 			}
+
 			names[v.Name] = struct{}{}
+
 			err := checkPipelineDeps(v, names)
 			if err != nil {
 				return err
 			}
+
 			if (v.Kind == "pipeline" || v.Kind == "") && (v.Type == "" || v.Type == "docker") {
 				err = checkPlatform(v.Platform)
 				if err != nil {
@@ -55,6 +59,7 @@ func checkPipelines(manifest *yaml.Manifest, trusted bool) error {
 			continue
 		}
 	}
+
 	return nil
 }
 
@@ -64,9 +69,11 @@ func checkPipelineDeps(pipeline *yaml.Pipeline, deps map[string]struct{}) error 
 		if !ok {
 			return ErrMissingPipelineDependency
 		}
+
 		if pipeline.Name == dep {
 			return ErrPipelineSelfDependency
 		}
 	}
+
 	return nil
 }

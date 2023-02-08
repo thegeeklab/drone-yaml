@@ -12,9 +12,6 @@ import (
 	"github.com/drone/drone-yaml/yaml"
 )
 
-// TODO rename WriteTag to WriteKey
-// TODO rename WriteTagValue to WriteKeyValue
-
 // ESCAPING:
 //
 //   The string starts with a special character:
@@ -102,7 +99,9 @@ func (w *baseWriter) WriteTagValue(k, v interface{}) {
 	if isZero(v) && !w.zero {
 		return
 	}
+
 	w.WriteTag(k)
+
 	switch {
 	case isPrimative(v):
 		_ = w.WriteByte(' ')
@@ -142,6 +141,7 @@ func (w *indexWriter) ExcludeZero() {
 
 func (w *indexWriter) WriteTag(v interface{}) {
 	_ = w.WriteByte('\n')
+
 	if w.index == 0 {
 		w.IndentDecrease()
 		w.Indent()
@@ -151,6 +151,7 @@ func (w *indexWriter) WriteTag(v interface{}) {
 	} else {
 		w.Indent()
 	}
+
 	writeValue(w, v)
 	_ = w.WriteByte(':')
 	w.index++
@@ -160,7 +161,9 @@ func (w *indexWriter) WriteTagValue(k, v interface{}) {
 	if isZero(v) && !w.zero {
 		return
 	}
+
 	w.WriteTag(k)
+
 	switch {
 	case isPrimative(v):
 		_ = w.WriteByte(' ')
@@ -212,8 +215,10 @@ func writeEncode(w writer, v string) {
 	if len(v) == 0 {
 		_ = w.WriteByte('"')
 		_ = w.WriteByte('"')
+
 		return
 	}
+
 	if isQuoted(v) {
 		fmt.Fprintf(w, "%q", v)
 	} else {
@@ -224,8 +229,10 @@ func writeEncode(w writer, v string) {
 func writeValue(w writer, v interface{}) {
 	if v == nil {
 		_ = w.WriteByte('~')
+
 		return
 	}
+
 	switch v := v.(type) {
 	case bool, int, int64, float64, string:
 		writeScalar(w, v)
@@ -261,13 +268,16 @@ func writeSequence(w writer, v []interface{}) {
 	if len(v) == 0 {
 		_ = w.WriteByte('[')
 		_ = w.WriteByte(']')
+
 		return
 	}
+
 	for i, v := range v {
 		if i != 0 {
 			_ = w.WriteByte('\n')
 			w.Indent()
 		}
+
 		_ = w.WriteByte('-')
 		_ = w.WriteByte(' ')
 		w.IndentIncrease()
@@ -280,13 +290,16 @@ func writeSequenceStr(w writer, v []string) {
 	if len(v) == 0 {
 		_ = w.WriteByte('[')
 		_ = w.WriteByte(']')
+
 		return
 	}
+
 	for i, v := range v {
 		if i != 0 {
 			_ = w.WriteByte('\n')
 			w.Indent()
 		}
+
 		_ = w.WriteByte('-')
 		_ = w.WriteByte(' ')
 		writeEncode(w, v)
@@ -297,22 +310,30 @@ func writeMapping(w writer, v map[interface{}]interface{}) {
 	if len(v) == 0 {
 		_ = w.WriteByte('{')
 		_ = w.WriteByte('}')
+
 		return
 	}
-	var keys []string
+
+	keys := make([]string, 0)
+
 	for k := range v {
 		s := fmt.Sprint(k)
 		keys = append(keys, s)
 	}
+
 	sort.Strings(keys)
+
 	for i, k := range keys {
 		v := v[k]
+
 		if i != 0 {
 			_ = w.WriteByte('\n')
 			w.Indent()
 		}
+
 		writeEncode(w, k)
 		_ = w.WriteByte(':')
+
 		if v == nil || isPrimative(v) || isZero(v) {
 			_ = w.WriteByte(' ')
 			writeValue(w, v)
@@ -335,19 +356,26 @@ func writeMappingStr(w writer, v map[string]string) {
 	if len(v) == 0 {
 		_ = w.WriteByte('{')
 		_ = w.WriteByte('}')
+
 		return
 	}
-	var keys []string
+
+	keys := make([]string, 0)
+
 	for k := range v {
 		keys = append(keys, k)
 	}
+
 	sort.Strings(keys)
+
 	for i, k := range keys {
 		v := v[k]
+
 		if i != 0 {
 			_ = w.WriteByte('\n')
 			w.Indent()
 		}
+
 		writeEncode(w, k)
 		_ = w.WriteByte(':')
 		_ = w.WriteByte(' ')

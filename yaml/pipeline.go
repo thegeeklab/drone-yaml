@@ -11,17 +11,17 @@ type Pipeline struct {
 	Type    string `json:"type,omitempty"`
 	Name    string `json:"name,omitempty"`
 
-	Clone       Clone             `json:"clone,omitempty"`
-	Concurrency Concurrency       `json:"concurrency,omitempty"`
-	DependsOn   []string          `json:"depends_on,omitempty" yaml:"depends_on" `
-	Node        map[string]string `json:"node,omitempty" yaml:"node"`
-	Platform    Platform          `json:"platform,omitempty"`
-	PullSecrets []string          `json:"image_pull_secrets,omitempty" yaml:"image_pull_secrets"`
-	Services    []*Container      `json:"services,omitempty"`
-	Steps       []*Container      `json:"steps,omitempty"`
-	Trigger     Conditions        `json:"trigger,omitempty"`
-	Volumes     []*Volume         `json:"volumes,omitempty"`
-	Workspace   Workspace         `json:"workspace,omitempty"`
+	Clone            Clone             `json:"clone,omitempty"`
+	Concurrency      Concurrency       `json:"concurrency,omitempty"`
+	DependsOn        []string          `json:"depends_on,omitempty" yaml:"depends_on" `
+	Node             map[string]string `json:"node,omitempty" yaml:"node"`
+	Platform         Platform          `json:"platform,omitempty"`
+	ImagePullSecrets []string          `json:"image_pull_secrets,omitempty" yaml:"image_pull_secrets"`
+	Services         []*Container      `json:"services,omitempty"`
+	Steps            []*Container      `json:"steps,omitempty"`
+	Trigger          Conditions        `json:"trigger,omitempty"`
+	Volumes          []*Volume         `json:"volumes,omitempty"`
+	Workspace        Workspace         `json:"workspace,omitempty"`
 }
 
 // GetVersion returns the resource version.
@@ -58,7 +58,7 @@ type (
 		ExtraHosts  []string              `json:"extra_hosts,omitempty" yaml:"extra_hosts"`
 		Failure     string                `json:"failure,omitempty"`
 		Image       string                `json:"image,omitempty"`
-		Network     string                `json:"network_mode,omitempty" yaml:"network_mode"`
+		NetworkMode string                `json:"network_mode,omitempty" yaml:"network_mode"`
 		Name        string                `json:"name,omitempty"`
 		Ports       []*Port               `json:"ports,omitempty"`
 		Privileged  bool                  `json:"privileged,omitempty"`
@@ -102,23 +102,23 @@ type (
 
 	// Volume that can be mounted by containers.
 	Volume struct {
-		Name     string          `json:"name,omitempty"`
-		EmptyDir *VolumeEmptyDir `json:"temp,omitempty" yaml:"temp"`
-		HostPath *VolumeHostPath `json:"host,omitempty" yaml:"host"`
+		Name string          `json:"name,omitempty"`
+		Temp *VolumeEmptyDir `json:"temp,omitempty" yaml:"temp"`
+		Host *VolumeHostPath `json:"host,omitempty" yaml:"host"`
 	}
 
 	// VolumeDevice describes a mapping of a raw block
 	// device within a container.
 	VolumeDevice struct {
-		Name       string `json:"name,omitempty"`
-		DevicePath string `json:"path,omitempty" yaml:"path"`
+		Name string `json:"name,omitempty"`
+		Path string `json:"path,omitempty" yaml:"path"`
 	}
 
 	// VolumeMount describes a mounting of a Volume
 	// within a container.
 	VolumeMount struct {
-		Name      string `json:"name,omitempty"`
-		MountPath string `json:"path,omitempty" yaml:"path"`
+		Name string `json:"name,omitempty"`
+		Path string `json:"path,omitempty" yaml:"path"`
 	}
 
 	// VolumeEmptyDir mounts a temporary directory from the

@@ -71,6 +71,7 @@ func TestQuoted(t *testing.T) {
 		writeEncode(buf, test.before)
 		a := test.after
 		b := buf.String()
+
 		if b != a {
 			t.Errorf("Want %q, got %q", a, b)
 		}
@@ -78,16 +79,17 @@ func TestQuoted(t *testing.T) {
 }
 
 func TestChunk(t *testing.T) {
+	testChunk := []string{
+		"ZDllMjFjZDg3Zjk0ZWFjZDRhMjdhMTA1ZDQ1OTVkYTA1ODBjMTk0ZWVlZjQyNmU4",
+		"N2RiNTIwZjg0NWQwYjcyYjE3MmFmZDIyYzg3NTQ1N2YyYzgxODhjYjJmNDhhOTFj",
+		"ZjdhMzA0YjEzYWFlMmYxMTIwMmEyM2Q1YjQ5Yjg2ZmMK",
+	}
+
 	s := strings.Join(testChunk, "")
 	got, want := chunk(s, 64), testChunk
+
 	if diff := cmp.Diff(got, want); diff != "" {
 		t.Errorf("Unexpected chunk value")
 		t.Log(diff)
 	}
-}
-
-var testChunk = []string{
-	"ZDllMjFjZDg3Zjk0ZWFjZDRhMjdhMTA1ZDQ1OTVkYTA1ODBjMTk0ZWVlZjQyNmU4",
-	"N2RiNTIwZjg0NWQwYjcyYjE3MmFmZDIyYzg3NTQ1N2YyYzgxODhjYjJmNDhhOTFj",
-	"ZjdhMzA0YjEzYWFlMmYxMTIwMmEyM2Q1YjQ5Yjg2ZmMK",
 }

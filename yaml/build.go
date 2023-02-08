@@ -29,15 +29,18 @@ type (
 // UnmarshalYAML implements yaml unmarshalling.
 func (b *Build) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	d := new(build)
+
 	err := unmarshal(&d.Image)
 	if err != nil {
 		err = unmarshal(d)
 	}
+
 	b.Args = d.Args
 	b.CacheFrom = d.CacheFrom
 	b.Context = d.Context
 	b.Dockerfile = d.Dockerfile
 	b.Labels = d.Labels
 	b.Image = d.Image
+
 	return err
 }

@@ -72,6 +72,7 @@ func isQuoted(s string) bool {
 	}
 
 	var r0, r1 byte
+
 	t := strings.TrimSpace(s)
 
 	// if the trimmed string does not match the string, it
@@ -84,6 +85,7 @@ func isQuoted(s string) bool {
 	if len(t) > 0 {
 		r0 = t[0]
 	}
+
 	if len(t) > 1 {
 		r1 = t[1]
 	}
@@ -103,6 +105,7 @@ func isQuoted(s string) bool {
 	}
 
 	var prev rune
+
 	for _, b := range s {
 		switch {
 		case isEscapeCode(b):
@@ -112,6 +115,7 @@ func isQuoted(s string) bool {
 		case b == '#' && prev == ' ':
 			return true
 		}
+
 		prev = b
 	}
 
@@ -124,13 +128,17 @@ func chunk(s string, chunkSize int) []string {
 	if len(s) == 0 {
 		return []string{s}
 	}
+
 	var chunks []string
+
 	for i := 0; i < len(s); i += chunkSize {
 		nn := i + chunkSize
 		if nn > len(s) {
 			nn = len(s)
 		}
+
 		chunks = append(chunks, s[i:nn])
 	}
+
 	return chunks
 }
