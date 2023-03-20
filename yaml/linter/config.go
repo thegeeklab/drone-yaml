@@ -27,7 +27,7 @@ var ErrCyclicalPipelineDependency = errors.New("linter: cyclical pipeline depend
 var ErrPipelineSelfDependency = errors.New("linter: pipeline cannot have a dependency on itself")
 
 // Manifest performs lint operations for a manifest.
-func Manifest(manifest *yaml.Manifest, trusted bool) error {
+func Manifest(manifest *yaml.Manifest) error {
 	return checkPipelines(manifest)
 }
 
